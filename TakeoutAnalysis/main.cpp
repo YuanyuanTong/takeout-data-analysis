@@ -3,11 +3,15 @@
 
 int main() {
 
+	cout << "Preparing to load the JSON file..." << endl;
 	// a list to store all conversations in the json file
 	ConversationList conversation_list = ReadHangoutsJson("Hangouts.json");
+	cout << "JSON file loaded..." << endl;
 
+	cout << "Preparing to load the maps activity file..." << endl;
 	// a list of all Maps activities
 	MapsActivityList maps_activity_list = ReadMapsActivityHtml("MyActivity.html");
+	cout << "Maps file loaded..." << endl;
 
 	// printing some representative information of the chat history
 
@@ -48,30 +52,35 @@ int main() {
 	location_con.PrintParticipants();
 	cout << "?" << endl;
 
-	// exploring more around a specific date
-	char* p;
-	cout << "Do you want to explore more about a specific day? (Y/N)" << endl;
-	p = new char[5];
-	cin >> p;
-	if (strcmp(p, "Y") == 0 || strcmp(p, "y") == 0) {
-		cout << "Input the date you want to explore (mm/dd/yyyy)." << endl;
-		p = new char[20];
+	while (true) {
+		// exploring more around a specific date
+		char* p;
+		cout << "Do you want to explore more about a specific day? (Y/N)" << endl;
+		p = new char[5];
 		cin >> p;
-		// did not check input legality yet ...
-		Convert2Timestamp(p, true);
-		MapsActivityList exploration_maps_list = maps_activity_list.GetPeriodActivities(p);
-		ConversationList exploration_conversation_list = conversation_list.GetPeriodConversations(p);
-		cout << "On " << p << "," << endl;
-		if (exploration_maps_list.Size() || exploration_conversation_list.Size()) {
-			exploration_conversation_list.PrintInformation();
-			exploration_maps_list.PrintInformation();
+		if (strcmp(p, "Y") == 0 || strcmp(p, "y") == 0) {
+			cout << "Input the date you want to explore (mm/dd/yyyy)." << endl;
+			p = new char[20];
+			cin >> p;
+			// did not check input legality yet ...
+			Convert2Timestamp(p, true);
+			MapsActivityList exploration_maps_list = maps_activity_list.GetPeriodActivities(p);
+			ConversationList exploration_conversation_list = conversation_list.GetPeriodConversations(p);
+			cout << "On " << p << "," << endl;
+			if (exploration_maps_list.Size() || exploration_conversation_list.Size()) {
+				exploration_conversation_list.PrintInformation();
+				exploration_maps_list.PrintInformation();
+			}
+			else {
+				cout << "you did nothing." << endl;
+			}
+
 		}
 		else {
-			cout << "you did nothing." << endl;
+			break;
 		}
-
 	}
-	
+
 	system("pause");
 	return 0;
 }
